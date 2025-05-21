@@ -1,13 +1,18 @@
 from enum import Enum
+from classes.HashTable import HashTable
 
 def read_create_packages(filename):
     #open file (CSV)
     #Id, Address, City, State, Zip, Deadline, Weight, Notes
     file = open(filename, "r")
-    packages = {}
+    lines = file.readlines()
+    packages = HashTable(len(lines))
+    file.seek(0)
     for line in file:
         line = line.strip().split(",")
-        packages[line[0]] = Package(line[0],line[1].strip(),line[2],line[3],line[4],line[5],line[6],line[7])
+        newPackage = Package(int(line[0]),line[1].strip(),line[2],line[3],line[4],line[5],line[6],line[7])
+        packages.insert(newPackage)
+
     file.close()
     return packages
 
@@ -74,5 +79,9 @@ class Package:
 
     def setSatus(self, status):
         self.status = status
+
+    def deliver(self):
+        self.status = Status.DELIVERED
+        print(f'Package {self.id}: DELIVERED')
 
 

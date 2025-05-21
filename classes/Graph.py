@@ -7,7 +7,7 @@ class Graph:
 
 
     def build_graph(self, filename):
-        print("Creating Graph...")
+        print("\nCreating Graph...")
 
         with open(filename, mode='r') as csvfile:
             distanceReader = csv.reader(csvfile) #open CSV file for reading
@@ -23,9 +23,7 @@ class Graph:
                     weight = distanceReader[j][i + 1]
                     if weight:
                         self.edges[frozenset({self.nodes[i],self.nodes[j]})] = float(weight)
-        print("Graph created!...")
-        
-        print(self.edges.items())
+        print(f"Graph with {len(self.nodes)} nodes and {len(self.edges)} edges  created!...\n")
 
     def get_weight(self, loc1, loc2):
         if loc1 == loc2:
