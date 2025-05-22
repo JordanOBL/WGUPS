@@ -1,9 +1,15 @@
+from datetime import datetime, timedelta, time
+
 class Truck:
     MAX_CAPACITY = 16
     SPEED = 18
     HUB = "4001 South 700 East"
+    DAY = 10
+    MONTH = 5
+    YEAR = 2025
 
-    def __init__(self, id, capacity):
+
+    def __init__(self, id, start_time=datetime(2025, 5, 10, 8, 0)):
         #Truck Number
         self.id = id
         self.max_capacity = self.MAX_CAPACITY
@@ -11,51 +17,81 @@ class Truck:
         self.packages = {}
         self.mileage = 0.0
         self.speed = self.SPEED
+        #dateTime(year, month, day, hour, minute)
+        self.start_time = start_time
+        self.current_time = self.start_time
+        
 
     
     def add_package(self, package):
         self.packages[package.getID()] = package
+        package.setTruckId(self.id)
 
     def is_full(self):
         return len(self.packages) == self.max_capacity
-
-
-
-    def deliver(self, graph, total_miles, time):
-        print(f"Delivering optimal route for truck {self.id}...")
-        #Loop through all packages
-        #Get closest to current location
-        while len(self.packages) > 0:
-            curr_package = None
-            distance = None
-            lowest_distance = float('inf')
-            for package in self.packages.values():
-                distance = graph.get_weight(self.location, package.getAddress())
-                if distance < lowest_distance:
-                    curr_package = package
-                    lowest_distance = distance
-            self.location = curr_package.getAddress()
-            self.update_mileage(lowest_distance)
-            curr_package.deliver()
-            del self.packages[curr_package.getID()]
-        print(f"All packages delivered: {float(self.mileage)} miles")
-        return self.mileage
-
+    
     def update_mileage(self, distance):
         self.mileage += distance
+
+    def update_time(self, distance):
+        time = distance / self.speed
+        self.current_time = self.current_time + timedelta(hours=time)
+
+    def return_to_hub(self, graph):
+        distance = graph.get_weight(self.location, self.HUB)
+        self.update_mileage(distance)
+        self.location = self.HUB
+
+
+    def deliver(self, graph, end_time=datetime(2025, 5, 10, 23, 59), start_time=datetime(2025, 5, 10, 8, 0) ):
+        self.current_time = start_time
+        print(f"Delivering optimal route for truck {self.id}...")
+        if self.current_time.time() < end_time.time():
+            for package in self.packages.values():
+                package.setSatus('En Route')
+
+        #Loop through all packages
+        #Get closest to current location
+        while len(self.packages) > 0 and self.current_time.time() < end_time.time():
+            curr_package = None
+            delivery_distance = None
+            lowest_delivery_distance = float('inf')
+            for package in self.packages.values():
+                delivery_distance = graph.get_weight(self.location, package.getAddress())
+                if package.getID() == 9 and self.current_time.time() < datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
+                    continue
+                if package.getID() == 6 or package.getID() == 25:
+                    curr_package = package
+                    lowest_delivery_distance = delivery_distance
+                    break
+                elif delivery_distance < lowest_delivery_distance:
+                    curr_package = package
+                    lowest_delivery_distance = delivery_distance
+            self.location = curr_package.getAddress()
+            self.update_mileage(lowest_delivery_distance)
+            self.update_time(lowest_delivery_distance)
+            curr_package.deliver(self.current_time.time(), self.id)
+            del self.packages[int(curr_package.getID())]
+        
+        if self.id == 1:
+            self.return_to_hub(graph)
+        print(f"All packages delivered: {float(self.mileage)} miles")
+        return self
+
+    
 
 def create_trucks(num_of_trucks):
     #init trucks
     trucks = []
     for i in range(num_of_trucks):
-        trucks.append(Truck(i + 1, 16))
+        trucks.append(Truck(i + 1))
     return trucks
 
 def load_trucks(trucks, packages):
     print("\nLoading Trucks...")
-    truck1_package_list = [13, 14, 15,16, 19,20] #Delivered together
-    truck2_package_list = [3, 18, 36, 38] #must be on truck 2
-    truck3_package_list = [25, 28, 32] #delayed packaged
+    truck1_package_list = [13, 14, 15,16,20] #Delivered together
+    truck2_package_list = [3, 18, 36, 38, 37, 12, 11, 5, 8, 22, 23] #must be on truck 2
+    truck3_package_list = [28,9, 32, 25, 6, 12] #delayed packaged
 
     #MUST HAVE ON TRUCK 1
     for package_id in truck1_package_list:

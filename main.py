@@ -1,15 +1,16 @@
 from classes.UI import UI
-from classes.Package import Package, read_create_packages
+from classes.Package import Package
 from classes.Truck import Truck, create_trucks, load_trucks
 from classes.Graph import Graph
-
+from classes.HashTable import load_create_packages_hash_table
+from datetime import datetime
 
 def main():
     #init ui
     ui = UI()
     print("Welcome to WGUPS!\n")
     #Read in Package info
-    packages = read_create_packages("/Users/jordan/Documents/WGU/course_work/DA2/wgups/assets/packageData.csv")
+    packages = load_create_packages_hash_table("/Users/jordan/Documents/WGU/course_work/DA2/wgups/assets/packageData.csv")
 
     #init graph
     graph = Graph()
@@ -25,11 +26,14 @@ def main():
     #Run Program
     running = True
     while running:
-        ui.print_menu()
-        t1_miles = trucks[0].deliver(graph, 0.00, 0)
-        t2_miles = trucks[1].deliver(graph, 0.00, 0)
-        print(f'total miles: {t1_miles + t2_miles}')
-        user_input = int(input("Enter a number: "))
+        user_end_time = ui.print_menu()
+        trucks[0].deliver(graph, user_end_time)
+        trucks[1].deliver(graph, user_end_time)
+        trucks[2].deliver(graph, user_end_time, trucks[0].current_time)
+        print(f'total miles: {trucks[0].mileage + trucks[1].mileage + trucks[2].mileage}')
+        ui.print_packages(packages)
+
+        
 
 
 
