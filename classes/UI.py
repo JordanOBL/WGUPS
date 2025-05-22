@@ -1,22 +1,25 @@
 from datetime import datetime
+from classes.Colors import bcolors
 class UI:
     def __init__(self):
         pass
 
     def print_menu(self):
-        print("1. Track Time")
+        print(f"{bcolors.ENDC}\n1. Track Time")
         print("2. Exit")
+        user_time = None
 
         try:
             user_input = int(input("Enter a number: "))
             if user_input == 1:
-                time = self.track_time()
-                return time
+                user_time = self.track_time()
+                
             elif user_input == 2:
                 exit()
             else:
                 print("Invalid Input")
                 self.print_menu()
+            return user_time
         except ValueError:
             print("Invalid Input")
             self.print_menu()
@@ -48,5 +51,17 @@ class UI:
 
 
     def print_packages(self, packages):
-        for package in packages:
+        print(f'{bcolors.OKCYAN}AT HUB{bcolors.ENDC}| {bcolors.WARNING}EN ROUTE {bcolors.ENDC}| {bcolors.OKGREEN}DELIVERED ON TIME {bcolors.ENDC}| {bcolors.FAIL} DELIVERED - NOT ON TIME {bcolors.ENDC}| {bcolors.OKBLUE} DELAYED\n')            
+        print(f'{bcolors.ENDC}ID | Address | City | State | Zip | Deadline | Weight | Notes | Status | Delivery Time | Truck\n')
+        for package in range(1, packages.getCount()):
+            package = packages.search(package)
             print(package)
+
+    def print_total_miles_driven(self, trucks):
+        sum = 0
+        print("\n")
+        for truck in trucks:
+            sum += truck.mileage
+            print(f"{bcolors.ENDC}Truck {truck.id} Mileage: {truck.mileage}")
+        print(f"Total miles driven: {sum}")
+            

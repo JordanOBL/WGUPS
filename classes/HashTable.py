@@ -12,12 +12,11 @@ def load_create_packages_hash_table(filename):
         line = line.strip().split(",")
         newPackage = Package(int(line[0]),line[1].strip(),line[2],line[3],line[4],line[5],line[6],line[7])
         packages.insert(newPackage)
-
     file.close()
     return packages
 
 def get_optimal_prime_table_size(approx_items):
-    print('\nCreating Double Hash Probing Hash Table...')
+    #print('\nCreating Double Hash Probing Hash Table...')
     optimal_size = approx_items * 2
     while True:  # keep testing new optimal_size candidates
         for i in range(2, int(math.sqrt(optimal_size))):
@@ -25,7 +24,7 @@ def get_optimal_prime_table_size(approx_items):
                 optimal_size += 1
                 break
         else:
-            print(f"Hash Table of size {optimal_size} created!\n")
+            #print(f"Hash Table of size {optimal_size} created!\n")
             return optimal_size
 
 class HashTable:

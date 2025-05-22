@@ -45,7 +45,7 @@ class Truck:
 
     def deliver(self, graph, end_time=datetime(2025, 5, 10, 23, 59), start_time=datetime(2025, 5, 10, 8, 0) ):
         self.current_time = start_time
-        print(f"Delivering optimal route for truck {self.id}...")
+        #print(f"Delivering optimal route for truck {self.id}...")
         if self.current_time.time() < end_time.time():
             for package in self.packages.values():
                 package.setSatus('En Route')
@@ -75,7 +75,7 @@ class Truck:
         
         if self.id == 1:
             self.return_to_hub(graph)
-        print(f"All packages delivered: {float(self.mileage)} miles")
+        #print(f"All packages delivered: {float(self.mileage)} miles")
         return self
 
     
@@ -88,7 +88,7 @@ def create_trucks(num_of_trucks):
     return trucks
 
 def load_trucks(trucks, packages):
-    print("\nLoading Trucks...")
+    #print("\nLoading Trucks...")
     truck1_package_list = [13, 14, 15,16,20] #Delivered together
     truck2_package_list = [3, 18, 36, 38, 37, 12, 11, 5, 8, 22, 23] #must be on truck 2
     truck3_package_list = [28,9, 32, 25, 6, 12] #delayed packaged
@@ -112,7 +112,7 @@ def load_trucks(trucks, packages):
                 trucks[1].add_package(packages.search(i))
             elif trucks[2].is_full() == False:
                 trucks[2].add_package(packages.search(i))
-    print("All trucks successfully loaded!\n")
+    #print("All trucks successfully loaded!\n")
 
     
 
