@@ -46,9 +46,12 @@ class Truck:
     def deliver(self, graph, end_time=datetime(2025, 5, 10, 23, 59), start_time=datetime(2025, 5, 10, 8, 0) ):
         self.current_time = start_time
         #print(f"Delivering optimal route for truck {self.id}...")
-        if self.current_time.time() < end_time.time():
-            for package in self.packages.values():
+      
+        for package in self.packages.values():  
+            if self.current_time.time() < end_time.time():
                 package.setSatus('En Route')
+            elif end_time.time() >= time(9,5):
+                package.setSatus('At Hub')
 
         #Loop through all packages
         #Get closest to current location
@@ -57,6 +60,7 @@ class Truck:
             delivery_distance = None
             lowest_delivery_distance = float('inf')
             for package in self.packages.values():
+            
                 delivery_distance = graph.get_weight(self.location, package.getAddress())
                 if package.getID() == 9 and self.current_time.time() < datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
                     continue
@@ -70,8 +74,9 @@ class Truck:
             self.location = curr_package.getAddress()
             self.update_mileage(lowest_delivery_distance)
             self.update_time(lowest_delivery_distance)
-            curr_package.deliver(self.current_time.time(), self.id)
-            del self.packages[int(curr_package.getID())]
+            if self.current_time.time() < end_time.time():
+                curr_package.deliver(self.current_time.time(), self.id)
+                del self.packages[int(curr_package.getID())]
         
         if self.id == 1:
             self.return_to_hub(graph)
