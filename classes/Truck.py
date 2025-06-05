@@ -43,16 +43,20 @@ class Truck:
         self.location = self.HUB
 
 
+
     def deliver(self, graph, end_time=datetime(2025, 5, 10, 23, 59), start_time=datetime(2025, 5, 10, 8, 0) ):
         self.current_time = start_time
+        if self.id == 3 and start_time.time() < time(9,5):
+            self.current_time = datetime(2025, 5, 10, 9, 5)
         #print(f"Delivering optimal route for truck {self.id}...")
       
         for package in self.packages.values():  
-            if self.current_time.time() < end_time.time():
+            if package.getStatus() == 'Delayed' and end_time.time() > time(9,5):
                 package.setSatus('En Route')
-            elif end_time.time() >= time(9,5):
-                package.setSatus('At Hub')
-
+                
+            if package.getStatus() != 'Delayed' and self.current_time.time() < end_time.time():
+                package.setSatus('En Route')
+        
         #Loop through all packages
         #Get closest to current location
         while len(self.packages) > 0 and self.current_time.time() < end_time.time():
@@ -95,7 +99,7 @@ def create_trucks(num_of_trucks):
 def load_trucks(trucks, packages):
     #print("\nLoading Trucks...")
     truck1_package_list = [13, 14, 15,16,20] #Delivered together
-    truck2_package_list = [3, 18, 36, 38, 37, 12, 11, 5, 8, 22, 23] #must be on truck 2
+    truck2_package_list = [3, 18, 36, 38, 37, 11, 5, 8, 22, 23] #must be on truck 2
     truck3_package_list = [28,9, 32, 25, 6, 12] #delayed packaged
 
     #MUST HAVE ON TRUCK 1
