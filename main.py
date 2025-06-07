@@ -15,11 +15,11 @@ def main():
     #Run Program
     running = True
     while running:
-        packages = load_create_packages_hash_table("/Users/jordan/Documents/WGU/course_work/DA2/wgups/assets/packageData.csv")
+        packages = load_create_packages_hash_table("./assets/packageData.csv")
 
         #init graph
         graph = Graph()
-        graph.build_graph('/Users/jordan/Documents/WGU/course_work/DA2/wgups/assets/WGUPS Distance CSV Table.csv')
+        graph.build_graph('./assets/WGUPS Distance CSV Table.csv')
 
         #print menu
         user_end_time = ui.print_menu()
