@@ -68,6 +68,11 @@ class Truck:
                 delivery_distance = graph.get_weight(self.location, package.getAddress())
                 if package.getID() == 9 and self.current_time.time() < datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
                     continue
+                if self.packages.get(9, None) != None and self.packages.get(9).getAddress() != '410 S State St' and self.current_time.time() >= datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
+                    self.packages[9].setAddress("410 S State St")
+                    self.packages[9].setCity("Salt Lake City")
+                    self.packages[9].setState("UT")
+                    self.packages[9].setZip("84111")
                 if package.getID() == 6 or package.getID() == 25:
                     curr_package = package
                     lowest_delivery_distance = delivery_distance
