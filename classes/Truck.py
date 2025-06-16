@@ -46,13 +46,16 @@ class Truck:
 
     def deliver(self, graph, end_time=datetime(2025, 5, 10, 23, 59), start_time=datetime(2025, 5, 10, 8, 0) ):
         self.current_time = start_time
-        if self.id == 3 and start_time.time() < time(9,5):
+        if self.id == 3 and start_time.time() <= time(9,5):
             self.current_time = datetime(2025, 5, 10, 9, 5)
-        #print(f"Delivering optimal route for truck {self.id}...")
-      
+        if self.packages.get(9, None) != None and self.packages.get(9).getAddress() != '410 S State St' and end_time.time() >= datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
+            self.packages[9].setAddress("410 S State St")
+            self.packages[9].setCity("Salt Lake City")
+            self.packages[9].setState("UT")
+            self.packages[9].setZip("84111")
+  
         for package in self.packages.values():  
-            if package.getStatus() == 'Delayed' and end_time.time() > time(9,5):
-                package.setSatus('En Route')
+          
                 
             if package.getStatus() != 'Delayed' and self.current_time.time() < end_time.time():
                 package.setSatus('En Route')
@@ -66,13 +69,10 @@ class Truck:
             for package in self.packages.values():
             
                 delivery_distance = graph.get_weight(self.location, package.getAddress())
-                if package.getID() == 9 and self.current_time.time() < datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
+                if package.getID() == 9 and end_time.time() < datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
                     continue
-                if self.packages.get(9, None) != None and self.packages.get(9).getAddress() != '410 S State St' and self.current_time.time() >= datetime(self.YEAR,self.MONTH, self.DAY, 10, 20).time():
-                    self.packages[9].setAddress("410 S State St")
-                    self.packages[9].setCity("Salt Lake City")
-                    self.packages[9].setState("UT")
-                    self.packages[9].setZip("84111")
+
+                
                 if package.getID() == 6 or package.getID() == 25:
                     curr_package = package
                     lowest_delivery_distance = delivery_distance

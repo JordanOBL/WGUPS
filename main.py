@@ -3,7 +3,7 @@ from classes.Package import Package
 from classes.Truck import Truck, create_trucks, load_trucks
 from classes.Graph import Graph
 from classes.HashTable import load_create_packages_hash_table
-from datetime import datetime
+from datetime import datetime, time
 
 def main():
     #init ui
@@ -23,7 +23,12 @@ def main():
 
         #print menu
         user_end_time = ui.print_menu()
-        
+        if user_end_time.time() >= time(9,5):
+            delayed = [6, 25, 28, 32]
+            for num in delayed:
+                package = packages.search(num)
+                package.setSatus('At Hub')
+                 
         #create Trucks
         trucks = create_trucks(3)
 
